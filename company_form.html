@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}Company profile · Elevate{% endblock %}
+{% block content %}
+<section class="form-page section-shell"><a class="back-link" href="{% url 'dashboard' %}">← Back to dashboard</a><div class="form-page-heading"><span class="eyebrow">YOUR TEAM, YOUR STORY</span><h1>Company <span class="serif-accent">profile.</span></h1><p>Help great people picture what it’s like to do their best work with you.</p></div>
+  <form method="post" class="editor-form">{% csrf_token %}{% for field in form %}<div class="form-field"><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% for error in field.errors %}<span class="field-error">{{ error }}</span>{% endfor %}</div>{% endfor %}<div class="editor-actions"><a class="button button-outline" href="{% url 'dashboard' %}">Cancel</a><button class="button button-gold">Save profile <span>↗</span></button></div></form>
+</section>
+{% endblock %}

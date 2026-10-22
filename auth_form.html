@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="auth-shell section-shell">
+  <div class="auth-visual"><span class="eyebrow">A MORE HUMAN WAY FORWARD</span><h2>Make space for<br><span class="serif-accent">what’s next.</span></h2><p>Meaningful work starts with a meaningful connection.</p><div class="auth-orbit"><span>✳</span></div><small>YOUR NEXT CHAPTER, ON YOUR TERMS</small></div>
+  <div class="auth-card"><span class="eyebrow">{{ eyebrow }}</span><h1>{{ heading }}</h1><p class="auth-intro">{{ intro }}</p>
+    {% if form.non_field_errors %}<div class="form-errors" role="alert">{{ form.non_field_errors }}</div>{% endif %}
+    <form method="post" class="stacked-form">{% csrf_token %}
+      {% for field in form %}
+      <div class="form-field {% if field.name == 'company_name' %}company-field{% endif %}" {% if field.name == 'company_name' and form.role.value != 'employer' %}data-company-field hidden{% elif field.name == 'company_name' %}data-company-field{% endif %}>
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}
+        {% if field.help_text %}<small class="field-help">{{ field.help_text|safe }}</small>{% endif %}
+        {% for error in field.errors %}<span class="field-error">{{ error }}</span>{% endfor %}
+      </div>
+      {% endfor %}
+      {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+      <button class="button button-gold button-wide" type="submit">{{ submit_text }} <span>↗</span></button>
+    </form>
+    {% if form.fields.password1 %}<p class="auth-switch">Already have an account? <a href="{% url 'login' %}">Log in</a></p>{% else %}<p class="auth-switch">New to Elevate? <a href="{% url 'register' %}">Create an account</a></p>{% endif %}
+    {% if password_link %}<a class="forgot-link" href="{% url 'password_reset' %}">Forgot your password?</a>{% endif %}
+  </div>
+</section>
+{% endblock %}

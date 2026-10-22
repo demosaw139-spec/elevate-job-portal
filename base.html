@@ -1,0 +1,53 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071426">
+  <meta name="description" content="A more considered way to find your next opportunity.">
+  <title>{% block title %}Elevate · Find work that moves you{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'portal/css/site.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+  <div class="ambient ambient-one" aria-hidden="true"></div><div class="ambient ambient-two" aria-hidden="true"></div>
+  <header class="site-header">
+    <a class="brand" href="{% url 'home' %}" aria-label="Elevate home"><span class="brand-mark">E</span><span>elevate<span class="brand-dot">.</span></span></a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-label="Toggle navigation"><span></span><span></span></button>
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="{% url 'job_list' %}">Find a role</a>
+      <a href="{% url 'home' %}#how">How it works</a>
+      {% if user.is_authenticated %}
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+        {% if user.role == "employer" %}<a href="{% url 'company_settings' %}">Company profile</a>{% endif %}
+      {% endif %}
+    </nav>
+    <div class="header-actions">
+      {% if user.is_authenticated %}
+        <span class="header-greeting">Hi, {{ user.first_name|default:user.username }}</span>
+        <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="button button-outline button-small" type="submit">Sign out</button></form>
+      {% else %}
+        <a class="login-link" href="{% url 'login' %}">Log in</a>
+        <a class="button button-gold button-small" href="{% url 'register' %}">Get started <span aria-hidden="true">↗</span></a>
+      {% endif %}
+    </div>
+  </header>
+  <main>
+    {% if messages %}<div class="flash-stack" role="status">{% for message in messages %}<div class="flash flash-{{ message.tags }}">{{ message }}</div>{% endfor %}</div>{% endif %}
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="site-footer">
+    <a class="brand" href="{% url 'home' %}"><span class="brand-mark">E</span><span>elevate<span class="brand-dot">.</span></span></a>
+    <p>Make your next move a meaningful one.</p>
+    <div class="footer-links"><a href="{% url 'job_list' %}">Explore roles</a><a href="{% url 'register' %}">Join Elevate</a><a href="/admin/">Platform admin</a></div>
+    <span class="copyright">© {% now "Y" %} Elevate. Made for what’s next.</span>
+  </footer>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r158/three.min.js" defer></script>
+  <script src="{% static 'portal/js/site.js' %}" defer></script>
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>

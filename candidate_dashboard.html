@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Your dashboard · Elevate{% endblock %}
+{% block content %}
+<section class="dashboard-shell section-shell">
+  <div class="dashboard-heading"><div><span class="eyebrow">YOUR SPACE</span><h1>Good to see you, <span class="serif-accent">{{ user.first_name|default:user.username }}.</span></h1><p>Every next chapter starts somewhere. Here’s where yours stands.</p></div><a class="button button-gold" href="{% url 'job_list' %}">Explore roles <span>↗</span></a></div>
+  <div class="stats-grid"><div class="stat-card"><span>APPLICATIONS SENT</span><b>{{ application_count }}</b><small>Your next move is in motion.</small></div><div class="stat-card"><span>INTERVIEWS</span><b>{{ interview_count }}</b><small>Conversations are opening up.</small></div><div class="stat-card"><span>SAVED ROLES</span><b>{{ saved_count }}</b><small>Possibilities to come back to.</small></div></div>
+  <div class="dashboard-columns"><section class="dashboard-panel"><div class="panel-heading"><div><span class="eyebrow">KEEP THE MOMENTUM</span><h2>Your applications</h2></div><a class="text-link" href="{% url 'job_list' %}">Find more ↗</a></div>
+      {% for application in applications %}<div class="application-row"><div class="company-avatar">{{ application.job.company.name|first|upper }}</div><div class="application-info"><b><a href="{{ application.job.get_absolute_url }}">{{ application.job.title }}</a></b><span>{{ application.job.company.name }} · {{ application.created_at|date:"M j, Y" }}</span></div><span class="status-pill status-{{ application.status }}">{{ application.get_status_display }}</span></div>{% empty %}<div class="panel-empty"><span>✳</span><p>Your first application is a step toward something new.</p><a class="text-link" href="{% url 'job_list' %}">Explore open roles ↗</a></div>{% endfor %}
+    </section>
+    <aside class="dashboard-panel saved-panel"><div class="panel-heading"><div><span class="eyebrow">A LITTLE INSPIRATION</span><h2>Saved for later</h2></div></div>
+      {% for saved in saved_jobs %}<div class="saved-row"><div class="company-avatar">{{ saved.job.company.name|first|upper }}</div><div><b><a href="{{ saved.job.get_absolute_url }}">{{ saved.job.title }}</a></b><span>{{ saved.job.company.name }}</span></div></div>{% empty %}<div class="panel-empty"><span>♡</span><p>Keep the roles that spark something.</p><a class="text-link" href="{% url 'job_list' %}">Browse roles ↗</a></div>{% endfor %}
+    </aside></div>
+</section>
+{% endblock %}

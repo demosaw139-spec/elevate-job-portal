@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Explore roles · Elevate{% endblock %}
+{% block content %}
+<section class="page-hero section-shell compact-hero"><span class="eyebrow">THE NEXT CHAPTER</span><h1>Find work that <span class="serif-accent">moves you.</span></h1><p>Good work starts with the right fit. Let’s find yours.</p></section>
+<section class="section-shell listings-layout">
+  <aside class="filter-panel"><span class="eyebrow">REFINE YOUR SEARCH</span><form method="get" action="{% url 'job_list' %}" class="filter-form">
+    <label>Role, skill or company<input name="q" value="{{ query }}" placeholder="e.g. Product design"></label>
+    <label>Location<input name="location" value="{{ location }}" placeholder="City or region"></label>
+    <label>Work style<select name="work_mode"><option value="">Any arrangement</option>{% for value,label in work_mode_choices %}<option value="{{ value }}" {% if work_mode == value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></label>
+    <label>Employment type<select name="employment_type"><option value="">Any type</option>{% for value,label in employment_type_choices %}<option value="{{ value }}" {% if employment_type == value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></label>
+    <button class="button button-gold button-wide">Show roles <span>↗</span></button>
+    <a class="clear-filters" href="{% url 'job_list' %}">Clear filters</a>
+  </form></aside>
+  <div class="results-area"><div class="results-heading"><span><b>{{ page.paginator.count }}</b> thoughtfully selected opportunities</span><span>Newest first</span></div>
+    <div class="results-list">{% for job in page.object_list %}
+      <article class="result-card"><div class="company-avatar">{{ job.company.name|first|upper }}</div><div class="result-content"><div class="result-topline"><span>{{ job.company.name }}</span><span class="job-mode">{{ job.get_work_mode_display }}</span></div><h2><a href="{{ job.get_absolute_url }}">{{ job.title }}</a></h2><p>{{ job.summary }}</p><div class="job-meta"><span>⌖ {{ job.location }}</span><span>{{ job.get_employment_type_display }}</span><span>{{ job.created_at|timesince }} ago</span></div></div>
+      {% if user.is_authenticated and user.role == "candidate" %}<form method="post" action="{% url 'toggle_saved' job.pk %}">{% csrf_token %}<input type="hidden" name="next" value="{{ request.get_full_path }}"><button class="save-button {% if job.pk in saved_ids %}is-saved{% endif %}" aria-label="{% if job.pk in saved_ids %}Unsave{% else %}Save{% endif %} {{ job.title }}">{% if job.pk in saved_ids %}♥{% else %}♡{% endif %}</button></form>{% endif %}</article>
+    {% empty %}<div class="empty-state results-empty"><span class="empty-glyph">⌕</span><h3>No roles found this time.</h3><p>Try another title, location, or filter to see more possibilities.</p><a class="text-link" href="{% url 'job_list' %}">Reset search ↗</a></div>{% endfor %}</div>
+    {% if page.has_other_pages %}<nav class="pagination" aria-label="Pagination">{% if page.has_previous %}<a href="?{{ request.GET.urlencode }}&page={{ page.previous_page_number }}">← Previous</a>{% endif %}<span>Page {{ page.number }} of {{ page.paginator.num_pages }}</span>{% if page.has_next %}<a href="?{{ request.GET.urlencode }}&page={{ page.next_page_number }}">Next →</a>{% endif %}</nav>{% endif %}
+  </div>
+</section>
+{% endblock %}

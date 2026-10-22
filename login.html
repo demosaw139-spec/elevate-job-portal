@@ -1,0 +1,7 @@
+{% extends "portal/auth_form.html" %}
+{% block title %}Log in · Elevate{% endblock %}
+{% block content %}
+{% with heading="Good to have you back." eyebrow="WELCOME BACK" intro="Pick up where your next chapter begins." submit_text="Log in" password_link=True %}
+{{ block.super }}
+{% endwith %}
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero section-shell">
+  <div class="hero-copy">
+    <span class="eyebrow"><span class="eyebrow-line"></span> YOUR NEXT CHAPTER STARTS HERE</span>
+    <h1>Work should take you <span class="serif-accent">somewhere.</span></h1>
+    <p class="hero-lede">Find work that fits who you are—and who you’re becoming. A more human way to discover your next opportunity.</p>
+    <form class="search-panel" action="{% url 'job_list' %}" method="get">
+      <label class="search-field"><span class="search-icon">⌕</span><span class="sr-only">Role, skill or company</span><input name="q" placeholder="Role, skill or company" autocomplete="off"></label>
+      <span class="search-divider"></span>
+      <label class="search-field"><span class="search-icon">⌖</span><span class="sr-only">City or remote</span><input name="location" placeholder="City or remote"></label>
+      <button class="button button-gold" type="submit">Find your role <span aria-hidden="true">↗</span></button>
+    </form>
+    <div class="popular-search"><span>Popular:</span><a href="{% url 'job_list' %}?work_mode=remote">Remote</a><a href="{% url 'job_list' %}?q=Design">Design</a><a href="{% url 'job_list' %}?q=Product">Product</a><a href="{% url 'job_list' %}?q=Engineering">Engineering</a></div>
+  </div>
+  <div class="hero-visual" aria-label="Abstract golden orbital sculpture">
+    <div class="orbital orbital-one"></div><div class="orbital orbital-two"></div><div class="orbital orbital-three"></div>
+    <div class="hero-core"><span class="core-star">✳</span></div>
+    <div class="float-card float-card-top"><span class="float-icon">↗</span><span><b>Your next move</b><small>starts with a possibility</small></span></div>
+    <div class="float-card float-card-bottom"><span class="mini-avatars"><i>J</i><i>M</i><i>A</i></span><span><b>Good people,</b><small>doing work that matters</small></span></div>
+    <span class="orbit-label label-one">PURPOSE</span><span class="orbit-label label-two">POTENTIAL</span>
+  </div>
+  <div class="hero-bottom"><span>01 / A NEW WAY FORWARD</span><span class="hero-scroll">SCROLL TO EXPLORE <i></i></span><span>BUILT AROUND YOU</span></div>
+</section>
+
+<section class="trust-strip"><p>ROOM TO GROW. WORK THAT MATTERS. A FUTURE THAT FEELS LIKE YOURS.</p><span class="trust-rule"></span><span>Thoughtfully matched, never mass-listed.</span></section>
+
+<section class="section-shell section-block" id="opportunities">
+  <div class="section-heading"><div><span class="eyebrow">THE RIGHT KIND OF POSSIBILITY</span><h2>Open doors, <span class="serif-accent">real momentum.</span></h2></div><a class="text-link" href="{% url 'job_list' %}">Explore all roles <span>↗</span></a></div>
+  <div class="job-grid">
+    {% for job in featured_jobs %}
+      <article class="job-card">
+        <div class="job-card-top"><div class="company-avatar">{{ job.company.name|first|upper }}</div><span class="job-mode">{{ job.get_work_mode_display }}</span></div>
+        <span class="job-company">{{ job.company.name }}</span><h3><a href="{{ job.get_absolute_url }}">{{ job.title }}</a></h3>
+        <p class="job-summary">{{ job.summary }}</p>
+        <div class="job-meta"><span>⌖ {{ job.location }}</span><span>{{ job.get_employment_type_display }}</span></div>
+        <a class="card-arrow" href="{{ job.get_absolute_url }}" aria-label="View {{ job.title }}">↗</a>
+      </article>
+    {% empty %}
+      <div class="empty-state"><span class="empty-glyph">✳</span><h3>Your next role belongs here.</h3><p>New opportunities are on their way. Create an account to be ready when they arrive.</p><a class="text-link" href="{% url 'register' %}">Join the community ↗</a></div>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="manifesto" id="how">
+  <div class="manifesto-art"><div class="manifesto-ring"></div><span>✳</span><small>GROW WITH INTENTION</small></div>
+  <div class="manifesto-copy"><span class="eyebrow">MORE THAN A MATCH</span><h2>Careers aren’t found.<br><span class="serif-accent">They’re made.</span></h2><p>We bring people and ambitious teams together around the thing that matters most: the possibility of doing your best work.</p>
+    <div class="steps"><div><span>01</span><b>Get clear</b><small>Tell us where you want to go.</small></div><div><span>02</span><b>Find your fit</b><small>Meet teams looking for you.</small></div><div><span>03</span><b>Make your move</b><small>Start something that matters.</small></div></div>
+  </div>
+</section>
+<section class="closing-cta"><span class="eyebrow">A GOOD NEXT STEP IS CLOSER THAN YOU THINK</span><h2>Ready to see what’s <span class="serif-accent">possible?</span></h2><a class="button button-gold" href="{% url 'job_list' %}">Explore open roles <span>↗</span></a></section>
+{% endblock %}
